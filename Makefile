@@ -6,7 +6,7 @@
 # Generic Makefile for oasis project
 
 # Set to setup.exe for the release
-SETUP := setup-dev.exe
+SETUP := ocaml setup.ml
 
 # Default rule
 default: build
@@ -23,41 +23,41 @@ setup.exe: setup.ml
 	ocamlopt.opt -w -3 -o $@ $< || ocamlopt -w -3 -o $@ $< || ocamlc -w -3 -o $@ $<
 	rm -f setup.cmx setup.cmi setup.o setup.obj setup.cmo
 
-build: $(SETUP) setup.data
-	./$(SETUP) -build $(BUILDFLAGS)
+build: setup.data
+	$(SETUP) -build $(BUILDFLAGS)
 
-doc: $(SETUP) setup.data build
-	./$(SETUP) -doc $(DOCFLAGS)
+doc: setup.data build
+	$(SETUP) -doc $(DOCFLAGS)
 	cp style.css _build/utop-api.docdir/
 
-test: $(SETUP) setup.data build
-	./$(SETUP) -test $(TESTFLAGS)
+test: setup.data build
+	$(SETUP) -test $(TESTFLAGS)
 
-all: $(SETUP)
-	./$(SETUP) -all $(ALLFLAGS)
+all:
+	$(SETUP) -all $(ALLFLAGS)
 
-install: $(SETUP) setup.data
+install: setup.data
 	ocamlfind remove utop 2>/dev/null || true
-	./$(SETUP) -install $(INSTALLFLAGS)
+	$(SETUP) -install $(INSTALLFLAGS)
 
-uninstall: $(SETUP) setup.data
-	./$(SETUP) -uninstall $(UNINSTALLFLAGS)
+uninstall: setup.data
+	$(SETUP) -uninstall $(UNINSTALLFLAGS)
 
-reinstall: $(SETUP) setup.data
+reinstall: setup.data
 	ocamlfind remove utop 2>/dev/null || true
-	./$(SETUP) -reinstall $(REINSTALLFLAGS)
+	$(SETUP) -reinstall $(REINSTALLFLAGS)
 
-clean: $(SETUP)
-	./$(SETUP) -clean $(CLEANFLAGS)
+clean:
+	$(SETUP) -clean $(CLEANFLAGS)
 
-distclean: $(SETUP)
-	./$(SETUP) -distclean $(DISTCLEANFLAGS)
+distclean:
+	$(SETUP) -distclean $(DISTCLEANFLAGS)
 
-configure: $(SETUP)
-	./$(SETUP) -configure $(CONFIGUREFLAGS)
+configure:
+	$(SETUP) -configure $(CONFIGUREFLAGS)
 
-setup.data: $(SETUP)
-	./$(SETUP) -configure $(CONFIGUREFLAGS)
+setup.data:
+	$(SETUP) -configure $(CONFIGUREFLAGS)
 
 gh-pages: doc
 	git clone `git config --get remote.origin.url` .gh-pages --reference .
